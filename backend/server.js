@@ -5,7 +5,8 @@ import dotenv from "dotenv";
 // Load env vars FIRST so every other import sees them
 dotenv.config();
 
-import routes from "./routes/index.js";
+import userRoutes from "./routes/userRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 const app = express();
@@ -20,12 +21,14 @@ app.use(
 );
 app.use(express.json());
 
-// ---------- Routes ----------
+// ---------- Health check ----------
 app.get("/", (req, res) => {
   res.json({ message: "API is running 🚀" });
 });
 
-app.use("/api", routes);
+// ---------- Routes ----------
+app.use("/api", userRoutes); // /api/register, /api/login, /api/me
+app.use("/api/admin", adminRoutes); // /api/admin/login, /api/admin/create
 
 // ---------- 404 + error handling (must be LAST) ----------
 app.use(notFound);
